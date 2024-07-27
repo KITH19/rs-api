@@ -2,12 +2,9 @@
   "version": 2,
   "functions": {
     "api/**/*.js": {
-      "maxDuration": 60
+      "maxDuration": 60 // Set to maximum 60 seconds
     }
   },
-  "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
   "routes": [
     { "src": "/(.*)", "dest": "/" }
   ]
