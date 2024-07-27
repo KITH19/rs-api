@@ -8,12 +8,23 @@ import { dbConnection } from "./database/dbConnection.js";
 dotenv.config();
 const app = express();
 
-// Update CORS configuration
+// List all allowed origins
+const allowedOrigins = [
+  "http://localhost:5173",  // For local development
+  "https://restaurent-reservation222.netlify.app"  // For deployed frontend
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Replace with your frontend URL
-    methods: ["POST", "GET", "OPTIONS"], // Allow necessary methods
-    credentials: true, // Allow credentials (cookies, authorization headers)
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin) || !origin) { // Allow requests from the listed origins or non-origin requests
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ["POST"],
+    credentials: true,
   })
 );
 
@@ -22,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/reservation", reservationRouter);
 
-app.get("/", (req, res, next) => {
+app.get("/", (req, res) => {
   return res.status(200).json({
     success: true,
     message: "HELLO WORLD AGAIN",
